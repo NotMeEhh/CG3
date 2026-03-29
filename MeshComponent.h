@@ -21,9 +21,10 @@ namespace megaEngine {
         void Shutdown() override;
 
         // orbit/self rotation params
-        // removed scalar selfSpeed here; use SetSelfRotationSpeeds to set per-axis speeds
         void SetOrbitParams(MeshComponent* parent, float radius, float orbitSpeed, const DirectX::XMFLOAT4& color);
         DirectX::XMFLOAT3 GetWorldPosition() const;
+        float GetOrbitRadius() const { return orbitRadius_; }
+        MeshComponent* GetParent() const { return parent_; }
 
         // set per-axis self rotation speeds (radians per second)
         void SetSelfRotationSpeeds(const DirectX::XMFLOAT3& speeds) { selfRotSpeed_ = speeds; }

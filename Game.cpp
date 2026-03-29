@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "MeshComponent.h"
+#include "OrbitRenderer.h"
 
 #include <dxgi.h>
 #include <chrono>
@@ -102,6 +103,17 @@ namespace game {
             obj->SetScale(scaleDist(rng) * (0.5f + i * 0.4f));
             components_.push_back(std::move(obj));
         }
+
+        // Create orbit renderer and set targets (all mesh components)
+        orbitRenderer_ = std::make_unique<megaEngine::OrbitRenderer>();
+        if (!orbitRenderer_->Initialize(device_.Get(), context_.Get())) return false;
+        // collect mesh component pointers
+        std::vector<megaEngine::MeshComponent*> meshTargets;
+        for (auto& c : components_) {
+            auto m = dynamic_cast<megaEngine::MeshComponent*>(c.get());
+            if (m) meshTargets.push_back(m);
+        }
+        orbitRenderer_->SetTargets(meshTargets);
 
         return true;
     }
@@ -213,6 +225,7 @@ namespace game {
         bool prevC = false;
         bool prevP = false;
         bool prevO = false;
+        bool prevL = false;
 
         while (display_.IsRunning())
         {
@@ -243,6 +256,10 @@ namespace game {
             if (oPressed && !prevO) camera_.ToggleProjection();
             prevO = oPressed;
 
+            bool lPressed = input_.IsKeyPressed('L');
+            if (lPressed && !prevL) showOrbits_ = !showOrbits_;
+            prevL = lPressed;
+
             camera_.Update(deltaTime, input_);
 
             for (auto& comp : components_) comp->Update(deltaTime);
@@ -269,6 +286,11 @@ namespace game {
         auto view = camera_.GetViewMatrix();
         auto proj = camera_.GetProjMatrix();
 
+        // If camera is orthographic and in FPS mode, draw orbits first
+        if (orbitRenderer_ && showOrbits_) {
+            orbitRenderer_->Render(context_.Get(), view, proj);
+        }
+
         for (auto& comp : components_) comp->Render(context_.Get(), view, proj);
 
         swapChain_->Present(1, 0);
@@ -292,6 +314,9 @@ namespace game {
 
     void Game::Shutdown()
     {
+        if (orbitRenderer_) orbitRenderer_->Shutdown();
+        orbitRenderer_.reset();
+
         for (auto& comp : components_) comp->Shutdown();
         components_.clear();
 

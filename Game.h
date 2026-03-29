@@ -9,6 +9,7 @@
 #include "DisplayWin32.h"
 #include "InputDevice.h"
 #include "Camera.h"
+#include "OrbitRenderer.h"
 
 using megaEngine::GameComponent;
 using megaEngine::DisplayWin32;
@@ -46,6 +47,7 @@ namespace game {
         Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilState_;
 
         std::vector<std::unique_ptr<GameComponent>> components_;
+        std::unique_ptr<megaEngine::OrbitRenderer> orbitRenderer_;
 
         int screenWidth_ = 800;
         int screenHeight_ = 800;
@@ -56,5 +58,8 @@ namespace game {
 
         // Camera
         Camera camera_;
+
+        // show orbits toggle
+        bool showOrbits_ = false;
     };
 }

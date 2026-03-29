@@ -22,6 +22,9 @@ namespace megaEngine {
         void ToggleMode();
         void CyclePerspective();
 
+        bool IsOrthographic() const { return orthographic_; }
+        CameraMode GetMode() const { return mode_; }
+
     private:
         CameraMode mode_;
 

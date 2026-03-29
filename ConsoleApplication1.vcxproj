@@ -130,6 +130,7 @@
     <ClCompile Include="InputDevice.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MeshComponent.cpp" />
+    <ClCompile Include="OrbitRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
@@ -138,6 +139,7 @@
     <ClInclude Include="GameComponent.h" />
     <ClInclude Include="InputDevice.h" />
     <ClInclude Include="MeshComponent.h" />
+    <ClInclude Include="OrbitRenderer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
